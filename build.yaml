@@ -28,5 +28,11 @@ include:
     artifact-name: eyelash_corne_studio_left
   - board: eyelash_corne_right
     shield: nice_view
+  - board: eyelash_corne_left
+    shield: settings_reset
+    artifact-name: eyelash_corne_settings_reset_left
+  - board: eyelash_corne_right
+    shield: settings_reset
+    artifact-name: eyelash_corne_settings_reset_right
   - board: nice_nano_v2
     shield: settings_reset

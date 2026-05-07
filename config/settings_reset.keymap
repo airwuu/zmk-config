@@ -1,0 +1,15 @@
+/*
+ * SPDX-License-Identifier: MIT
+ */
+
+#include <behaviors.dtsi>
+
+/ {
+    keymap {
+        compatible = "zmk,keymap";
+
+        default_layer {
+            bindings = <&sys_reset>;
+        };
+    };
+};

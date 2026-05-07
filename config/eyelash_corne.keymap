@@ -5,6 +5,7 @@
 #include <zephyr/dt-bindings/input/input-event-codes.h>
 #include <behaviors.dtsi>
 #include <dt-bindings/zmk/bt.h>
+#include <dt-bindings/zmk/ext_power.h>
 #include <dt-bindings/zmk/keys.h>
 #include <dt-bindings/zmk/outputs.h>
 #include <dt-bindings/zmk/pointing.h>
@@ -80,7 +81,7 @@
             display-name = "NUMS";
             bindings = <
 &bt BT_CLR_ALL  &kp N1           &kp N2          &kp N3        &kp N4        &kp N5                                         &mmv MOVE_UP                     &kp N6           &kp N7        &kp N8        &kp N9     &kp N0     &kp BSPC
-&trans          &none            &none           &none         &none         &none                          &mmv MOVE_LEFT  &mkp LCLK       &mmv MOVE_RIGHT  &kp N0           &kp N4        &kp N5        &kp N6     &kp HOME   &kp PG_UP
+&trans          &ext_power EP_ON  &ext_power EP_OFF &none      &none         &none                          &mmv MOVE_LEFT  &mkp LCLK       &mmv MOVE_RIGHT  &kp N0           &kp N4        &kp N5        &kp N6     &kp HOME   &kp PG_UP
 &trans          &rgb_ug RGB_OFF  &rgb_ug RGB_ON  &trans        &rgb_ug RGB_HUI &rgb_ug RGB_EFF  &rgb_ug RGB_TOG             &mmv MOVE_DOWN                   &rgb_ug RGB_EFR  &kp N1        &kp N2        &kp N3     &kp END    &kp PG_DN
                                                  &trans        &trans        &trans                                                                          &trans           &trans        &trans
             >;
