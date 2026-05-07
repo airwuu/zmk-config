@@ -2,10 +2,15 @@ manifest:
   remotes:
     - name: zmkfirmware
       url-base: https://github.com/zmkfirmware
+    - name: gpeye
+      url-base: https://github.com/GPeye
   projects:
     - name: eyelash_corne
       url: https://github.com/a741725193/zmk-new_corne
       revision: a7d93082b24f5b20e710a5db9b0e3141ade229b3
+    - name: mario-peripheral-animation
+      remote: gpeye
+      revision: 1aa3950d6c86b4240b3f79d06bdbb04c5d920711
     - name: zmk
       remote: zmkfirmware
       revision: v0.3.0
