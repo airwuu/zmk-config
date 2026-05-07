@@ -1,0 +1,168 @@
+#include <behaviors.dtsi>
+#include <dt-bindings/zmk/keys.h>
+
+/ {
+  keymap {
+    compatible = "zmk,keymap";
+
+    COLEMAK_DH {
+      bindings = <
+        &Key Press 458795         
+        &Key Press 458772         
+        &Key Press 458778         
+        &Key Press 458761         
+        &Key Press 458771         
+        &Key Press 458757         
+        &Key Press 458834         
+        &Key Press 458765         
+        &Key Press 458767         
+        &Key Press 458776         
+        &Key Press 458780         
+        &Key Press 458803         
+        &None                     
+        &Shift/Caps Lock Tap Dance
+        &Key Press 458756         
+        &Key Press 458773         
+        &Key Press 458774         
+        &Layer-Tap 1 458775       
+        &Key Press 458762         
+        &Key Press 458832         
+        &Key Press 458792         
+        &Key Press 458831         
+        &Key Press 458768         
+        &Key Press 458769         
+        &Key Press 458760         
+        &Key Press 458764         
+        &Key Press 458770         
+        &Key Press 458793         
+        &Key Press 458976         
+        &Key Press 458779         
+        &Key Press 458758         
+        &Key Press 458759         
+        &Key Press 458777         
+        &Key Press 458781         
+        &Key Toggle 786658        
+        &Key Press 458833         
+        &Key Press 458766         
+        &Key Press 458763         
+        &Key Press 458806         
+        &Key Press 458807         
+        &Key Press 458808         
+        &None                     
+        &Key Press 458979         
+        &Key Press 458796         
+        &Layer-Tap 2 458796       
+        &Key Press 458794         
+        &Key Press 458792         
+        &Key Press 458982         
+      >;
+    };
+
+    NUMS {
+      bindings = <
+        &Bluetooth 4          
+        &Key Press 458782     
+        &Key Press 458783     
+        &Key Press 458784     
+        &Key Press 458785     
+        &Key Press 458786     
+        &mouse_move 64336     
+        &Key Press 458787     
+        &Key Press 458788     
+        &Key Press 458789     
+        &Key Press 458790     
+        &Key Press 458791     
+        &Key Press 458794     
+        &Transparent          
+        &None                 
+        &None                 
+        &None                 
+        &None                 
+        &None                 
+        &mouse_move 4216324096
+        &Mouse Key Press 1    
+        &mouse_move 78643200  
+        &Key Press 458791     
+        &Key Press 458785     
+        &Key Press 458786     
+        &Key Press 458787     
+        &Key Press 458826     
+        &Key Press 458827     
+        &Transparent          
+        &Underglow 2          
+        &Underglow 1          
+        &Transparent          
+        &Underglow 3          
+        &Underglow 11         
+        &Underglow            
+        &mouse_move 1200      
+        &Underglow 12         
+        &Key Press 458782     
+        &Key Press 458783     
+        &Key Press 458784     
+        &Key Press 458829     
+        &Key Press 458830     
+        &Transparent          
+        &Transparent          
+        &Transparent          
+        &Transparent          
+        &Transparent          
+        &Transparent          
+      >;
+    };
+
+    SMBL {
+      bindings = <
+        &Transparent          
+        &Key Press 458805     
+        &Key Press 34013238   
+        &Key Press 34013239   
+        &Key Press 458797     
+        &Key Press 34013233   
+        &mouse_move 64336     
+        &Key Press 34013219   
+        &Key Press 34013231   
+        &Key Press 34013232   
+        &Key Press 34013217   
+        &Key Press 34013229   
+        &Key Press 458794     
+        &Transparent          
+        &Key Press 34013214   
+        &Key Press 34013221   
+        &Key Press 458808     
+        &Key Press 458798     
+        &Key Press 34013220   
+        &mouse_move 4216324096
+        &Mouse Key Press 1    
+        &mouse_move 78643200  
+        &Key Press 34013216   
+        &Key Press 34013222   
+        &Key Press 34013223   
+        &Key Press 458803     
+        &Key Press 34013236   
+        &Key Press 458804     
+        &Transparent          
+        &Key Press 34013237   
+        &Key Press 34013230   
+        &Key Press 458799     
+        &Key Press 458800     
+        &Key Press 34013218   
+        &Transparent          
+        &mouse_move 1200      
+        &Key Press 34013215   
+        &Key Press 34013235   
+        &Key Press 458806     
+        &Key Press 458807     
+        &Key Press 34013240   
+        &Transparent          
+        &Transparent          
+        &Transparent          
+        &Transparent          
+        &Transparent          
+        &Transparent          
+        &Transparent          
+      >;
+    };
+
+  };
+};
