@@ -2,13 +2,20 @@ manifest:
   remotes:
     - name: zmkfirmware
       url-base: https://github.com/zmkfirmware
+    - name: mctechnology17
+      url-base: https://github.com/mctechnology17
+    - name: eyelash
+      url-base: https://github.com/a741725193
   projects:
-    - name: eyelash_corne
-      url: https://github.com/a741725193/zmk-new_corne
-      revision: a7d93082b24f5b20e710a5db9b0e3141ade229b3
     - name: zmk
       remote: zmkfirmware
       revision: v0.3.0
       import: app/west.yml
+    - name: zmk-nice-oled
+      remote: mctechnology17
+      revision: 46f824abb2bd41f1287c5c68abd14122af6042a3
+    - name: zmk-board-eyelash
+      remote: eyelash
+      revision: 29d53043035e08113996ae44083f23d8057a444e
   self:
     path: config

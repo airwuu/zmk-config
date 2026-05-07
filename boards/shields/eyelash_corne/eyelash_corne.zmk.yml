@@ -1,0 +1,15 @@
+file_format: "1"
+id: eyelash_corne
+name: Eyelash Corne
+url: https://github.com/a741725193/zmk-corne-oled
+type: shield
+requires: [pro_micro]
+features:
+  - keys
+  - display
+outputs:
+  - usb
+  - ble
+siblings:
+  - eyelash_corne_left
+  - eyelash_corne_right
