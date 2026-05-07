@@ -6,3 +6,9 @@ include:
   - board: eyelash_corne_right
     shield: nice_view
     artifact-name: eyelash_corne_right
+  - board: eyelash_corne_left
+    shield: settings_reset
+    artifact-name: eyelash_corne_settings_reset_left
+  - board: eyelash_corne_right
+    shield: settings_reset
+    artifact-name: eyelash_corne_settings_reset_right
