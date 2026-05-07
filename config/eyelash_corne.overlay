@@ -1,0 +1,58 @@
+/*
+ * OLED display support for Eyelash Corne.
+ *
+ * The PCB display header is also used by the nice!view SPI definition in the
+ * vendor board. For a 4-pin SSD1306 OLED, use those header pins as I2C.
+ */
+
+/ {
+    chosen {
+        zephyr,display = &oled;
+    };
+};
+
+&pinctrl {
+    i2c0_default: i2c0_default {
+        group1 {
+            psels = <NRF_PSEL(TWIM_SCL, 0, 20)>,
+                <NRF_PSEL(TWIM_SDA, 0, 17)>;
+        };
+    };
+
+    i2c0_sleep: i2c0_sleep {
+        group1 {
+            psels = <NRF_PSEL(TWIM_SCL, 0, 20)>,
+                <NRF_PSEL(TWIM_SDA, 0, 17)>;
+            low-power-enable;
+        };
+    };
+};
+
+&spi0 {
+    status = "disabled";
+};
+
+&i2c0 {
+    compatible = "nordic,nrf-twim";
+    status = "okay";
+    pinctrl-0 = <&i2c0_default>;
+    pinctrl-1 = <&i2c0_sleep>;
+    pinctrl-names = "default", "sleep";
+    clock-frequency = <400000>;
+
+    oled: ssd1306@3c {
+        compatible = "solomon,ssd1306fb";
+        reg = <0x3c>;
+        width = <128>;
+        height = <32>;
+        segment-offset = <0>;
+        page-offset = <0>;
+        display-offset = <0>;
+        multiplex-ratio = <31>;
+        segment-remap;
+        com-invdir;
+        com-sequential;
+        inversion-on;
+        prechargep = <0x22>;
+    };
+};
