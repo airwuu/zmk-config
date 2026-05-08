@@ -22,6 +22,8 @@
 #include <zmk/keymap.h>
 #include <zmk/keys.h>
 
+#include <dt-bindings/zmk/keys.h>
+
 LOG_MODULE_DECLARE(zmk, CONFIG_ZMK_LOG_LEVEL);
 
 #if DT_HAS_COMPAT_STATUS_OKAY(DT_DRV_COMPAT)
@@ -50,8 +52,9 @@ struct active_idle_tap_dance {
   uint32_t param2;
   bool is_pressed;
   bool passthrough;
+  bool primary_pressed;
+  bool secondary_pressed;
   bool timer_cancelled;
-  bool tap_dance_decided;
   int64_t release_at;
   struct k_work_delayable release_timer;
   const struct behavior_idle_tap_dance_config *config;
@@ -99,8 +102,9 @@ new_idle_tap_dance(struct zmk_behavior_binding *binding,
     ref_dance->param2 = binding->param2;
     ref_dance->is_pressed = true;
     ref_dance->passthrough = false;
+    ref_dance->primary_pressed = false;
+    ref_dance->secondary_pressed = false;
     ref_dance->timer_cancelled = false;
-    ref_dance->tap_dance_decided = false;
     ref_dance->release_at = 0;
     ref_dance->config = config;
     *tap_dance = ref_dance;
@@ -140,8 +144,13 @@ selected_binding(struct active_idle_tap_dance *tap_dance, int behavior_index) {
 static int
 press_idle_tap_dance_behavior(struct active_idle_tap_dance *tap_dance,
                               int behavior_index, int64_t timestamp) {
-  tap_dance->tap_dance_decided = true;
   tap_dance->active_behavior_index = behavior_index;
+  if (behavior_index == 0) {
+    tap_dance->primary_pressed = true;
+  } else {
+    tap_dance->secondary_pressed = true;
+  }
+
   struct zmk_behavior_binding binding =
       selected_binding(tap_dance, behavior_index);
   struct zmk_behavior_binding_event event = {
@@ -157,9 +166,15 @@ press_idle_tap_dance_behavior(struct active_idle_tap_dance *tap_dance,
 
 static int
 release_idle_tap_dance_behavior(struct active_idle_tap_dance *tap_dance,
-                                int64_t timestamp) {
+                                int behavior_index, int64_t timestamp) {
+  if (behavior_index == 0) {
+    tap_dance->primary_pressed = false;
+  } else {
+    tap_dance->secondary_pressed = false;
+  }
+
   struct zmk_behavior_binding binding =
-      selected_binding(tap_dance, tap_dance->active_behavior_index);
+      selected_binding(tap_dance, behavior_index);
   struct zmk_behavior_binding_event event = {
       .position = tap_dance->position,
       .timestamp = timestamp,
@@ -168,7 +183,6 @@ release_idle_tap_dance_behavior(struct active_idle_tap_dance *tap_dance,
 #endif
   };
 
-  clear_idle_tap_dance(tap_dance);
   return zmk_behavior_invoke_binding(&binding, event, false);
 }
 
@@ -191,6 +205,15 @@ static void reset_timer(struct active_idle_tap_dance *tap_dance,
   }
 }
 
+static int tap_backspace(int64_t timestamp) {
+  int ret = raise_zmk_keycode_state_changed_from_encoded(BSPC, true, timestamp);
+  if (ret < 0) {
+    return ret;
+  }
+
+  return raise_zmk_keycode_state_changed_from_encoded(BSPC, false, timestamp);
+}
+
 static int
 on_idle_tap_dance_binding_pressed(struct zmk_behavior_binding *binding,
                                   struct zmk_behavior_binding_event event) {
@@ -209,11 +232,16 @@ on_idle_tap_dance_binding_pressed(struct zmk_behavior_binding *binding,
 
     if (!idle_window_open(config, event.timestamp)) {
       tap_dance->passthrough = true;
-      return press_idle_tap_dance_behavior(tap_dance, 0, event.timestamp);
     }
+
+    return press_idle_tap_dance_behavior(tap_dance, 0, event.timestamp);
   } else {
     stop_timer(tap_dance);
     tap_dance->is_pressed = true;
+
+    if (tap_dance->passthrough) {
+      return press_idle_tap_dance_behavior(tap_dance, 0, event.timestamp);
+    }
 
     if (tap_dance->counter < ZMK_BHV_IDLE_TAP_DANCE_BINDING_COUNT) {
       tap_dance->counter++;
@@ -221,6 +249,18 @@ on_idle_tap_dance_binding_pressed(struct zmk_behavior_binding *binding,
   }
 
   if (tap_dance->counter == ZMK_BHV_IDLE_TAP_DANCE_BINDING_COUNT) {
+    if (tap_dance->primary_pressed) {
+      int ret = release_idle_tap_dance_behavior(tap_dance, 0, event.timestamp);
+      if (ret < 0) {
+        return ret;
+      }
+    }
+
+    int ret = tap_backspace(event.timestamp);
+    if (ret < 0) {
+      return ret;
+    }
+
     return press_idle_tap_dance_behavior(tap_dance, 1, event.timestamp);
   }
 
@@ -239,8 +279,20 @@ on_idle_tap_dance_binding_released(struct zmk_behavior_binding *binding,
 
   tap_dance->is_pressed = false;
 
-  if (tap_dance->tap_dance_decided) {
-    release_idle_tap_dance_behavior(tap_dance, event.timestamp);
+  if (tap_dance->secondary_pressed) {
+    release_idle_tap_dance_behavior(tap_dance, 1, event.timestamp);
+    clear_idle_tap_dance(tap_dance);
+    return ZMK_BEHAVIOR_OPAQUE;
+  }
+
+  if (tap_dance->primary_pressed) {
+    release_idle_tap_dance_behavior(tap_dance, 0, event.timestamp);
+  }
+
+  if (tap_dance->passthrough) {
+    clear_idle_tap_dance(tap_dance);
+  } else {
+    reset_timer(tap_dance, event);
   }
 
   return ZMK_BEHAVIOR_OPAQUE;
@@ -256,14 +308,10 @@ static void behavior_idle_tap_dance_timer_handler(struct k_work *item) {
     return;
   }
 
-  press_idle_tap_dance_behavior(tap_dance, tap_dance->counter - 1,
-                                tap_dance->release_at);
-
-  if (tap_dance->is_pressed) {
-    return;
+  if (!tap_dance->is_pressed && !tap_dance->primary_pressed &&
+      !tap_dance->secondary_pressed) {
+    clear_idle_tap_dance(tap_dance);
   }
-
-  release_idle_tap_dance_behavior(tap_dance, tap_dance->release_at);
 }
 
 static const struct behavior_driver_api behavior_idle_tap_dance_driver_api = {
@@ -284,16 +332,15 @@ idle_tap_dance_position_state_changed_listener(const zmk_event_t *eh) {
 
     if (tap_dance->position == ZMK_BHV_IDLE_TAP_DANCE_POSITION_FREE ||
         tap_dance->position == ev->position || tap_dance->passthrough ||
-        tap_dance->tap_dance_decided) {
+        tap_dance->secondary_pressed) {
       continue;
     }
 
     stop_timer(tap_dance);
-    press_idle_tap_dance_behavior(tap_dance, tap_dance->counter - 1,
-                                  ev->timestamp);
-
-    if (!tap_dance->is_pressed) {
-      release_idle_tap_dance_behavior(tap_dance, ev->timestamp);
+    if (tap_dance->primary_pressed) {
+      tap_dance->passthrough = true;
+    } else if (!tap_dance->is_pressed) {
+      clear_idle_tap_dance(tap_dance);
     }
 
     return ZMK_EV_EVENT_BUBBLE;

@@ -141,6 +141,7 @@ require_tool() {
 }
 
 require_tool west
+git config --global --add safe.directory '*'
 
 if [[ "$clean" == "1" ]]; then
     find "$base_dir" -mindepth 1 -maxdepth 1 -exec rm -rf {} +
@@ -154,13 +155,20 @@ if [[ ! -d "${base_dir}/.west" ]]; then
     west init -l "$config_dir"
 fi
 
+if [[ "$skip_update" == "1" ]] && ! west list >/dev/null 2>&1; then
+    printf 'West cache is not ready for --skip-update; running west update.\n'
+    skip_update=0
+fi
+
 if [[ "$skip_update" != "1" ]]; then
     west update --fetch-opt=--filter=tree:0
 else
     printf 'Skipping west update.\n'
 fi
 
-west zephyr-export
+if ! west zephyr-export; then
+    printf 'west zephyr-export unavailable; continuing with west build.\n'
+fi
 
 emit_build_entries() {
     awk '
