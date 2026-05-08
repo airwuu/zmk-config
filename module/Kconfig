@@ -1,12 +1,12 @@
-config ZMK_BEHAVIOR_IDLE_TAP_DANCE
+config ZMK_BEHAVIOR_AUTO_SYMBOL
     bool
     default y
-    depends on DT_HAS_ZMK_BEHAVIOR_IDLE_TAP_DANCE_ENABLED
+    depends on DT_HAS_ZMK_BEHAVIOR_AUTO_SYMBOL_ENABLED
 
-if ZMK_BEHAVIOR_IDLE_TAP_DANCE
+if ZMK_BEHAVIOR_AUTO_SYMBOL
 
-config ZMK_BEHAVIOR_IDLE_TAP_DANCE_MAX_HELD
-    int "Idle Tap-Dance Max Held"
+config ZMK_BEHAVIOR_AUTO_SYMBOL_MAX_HELD
+    int "Auto Symbol Max Held"
     default 10
 
 endif

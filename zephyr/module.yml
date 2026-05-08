@@ -1,4 +1,4 @@
-name: zmk-behavior-idle-tap-dance
+name: zmk-behavior-auto-symbol
 build:
   cmake: module
   kconfig: module/Kconfig

@@ -1,0 +1,16 @@
+description: Solo-hold symbol behavior
+
+compatible: "zmk,behavior-auto-symbol"
+
+include: two_param.yaml
+
+properties:
+  bindings:
+    type: phandles
+    required: true
+  tapping-term-ms:
+    type: int
+    default: 180
+  interrupt-layer:
+    type: int
+    default: 255
