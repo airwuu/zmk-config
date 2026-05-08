@@ -149,6 +149,18 @@ static int tap_auto_symbol_behavior(struct active_auto_symbol *auto_symbol,
   return release_auto_symbol_behavior(auto_symbol, behavior_index, timestamp);
 }
 
+static int press_primary_on_interrupt(struct active_auto_symbol *auto_symbol,
+                                      int64_t timestamp) {
+  int ret = press_auto_symbol_behavior(auto_symbol, 0, timestamp);
+  if (ret < 0) {
+    LOG_WRN("Failed to press interrupted auto-symbol primary (%d)", ret);
+    return ret;
+  }
+
+  auto_symbol->primary_pressed = true;
+  return 0;
+}
+
 static int
 on_auto_symbol_binding_pressed(struct zmk_behavior_binding *binding,
                                struct zmk_behavior_binding_event event) {
@@ -222,15 +234,15 @@ static int auto_symbol_position_state_changed_listener(const zmk_event_t *eh) {
 
     auto_symbol->interrupted = true;
     if (has_interrupt_layer(auto_symbol)) {
-      zmk_keymap_layer_activate(auto_symbol->config->interrupt_layer);
-      auto_symbol->interrupt_layer_active = true;
-    } else {
-      int ret = press_auto_symbol_behavior(auto_symbol, 0, ev->timestamp);
-      if (ret < 0) {
-        LOG_WRN("Failed to press interrupted auto-symbol primary (%d)", ret);
-        continue;
+      if (ev->timestamp - auto_symbol->pressed_at >=
+          auto_symbol->config->tapping_term_ms) {
+        zmk_keymap_layer_activate(auto_symbol->config->interrupt_layer);
+        auto_symbol->interrupt_layer_active = true;
+      } else {
+        press_primary_on_interrupt(auto_symbol, ev->timestamp);
       }
-      auto_symbol->primary_pressed = true;
+    } else {
+      press_primary_on_interrupt(auto_symbol, ev->timestamp);
     }
   }
 
