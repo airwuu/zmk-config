@@ -33,9 +33,37 @@
     behaviors {
         td0: td0 {
             compatible = "zmk,behavior-tap-dance";
-            display-name = "Shift/Caps Lock Tap Dance";
+            display-name = "Shift/Escape Tap Dance";
             #binding-cells = <0>;
-            bindings = <&kp LEFT_SHIFT>, <&kp CAPS>;
+            bindings = <&kp LEFT_SHIFT>, <&kp ESC>;
+        };
+
+        ids: idle_symbol {
+            compatible = "zmk,behavior-idle-tap-dance";
+            display-name = "Idle Symbol";
+            #binding-cells = <2>;
+            tapping-term-ms = <180>;
+            require-prior-idle-ms = <350>;
+            bindings = <&kp>, <&kp>;
+        };
+
+        ids_t: idle_symbol_t {
+            compatible = "zmk,behavior-idle-tap-dance";
+            display-name = "Idle Symbol T";
+            #binding-cells = <2>;
+            tapping-term-ms = <180>;
+            require-prior-idle-ms = <350>;
+            primary-param2 = <T>;
+            bindings = <&lt>, <&kp>;
+        };
+
+        tp_mt: tap_preferred_mod_tap {
+            compatible = "zmk,behavior-hold-tap";
+            display-name = "Tap Preferred Mod-Tap";
+            #binding-cells = <2>;
+            flavor = "tap-preferred";
+            tapping-term-ms = <200>;
+            bindings = <&kp>, <&kp>;
         };
     };
 
@@ -68,10 +96,10 @@
         default_layer {
             display-name = "COLEMAK_DH";
             bindings = <
-&kp TAB    &kp Q      &kp W      &kp F     &kp P      &kp B                                  &kp UP                  &kp J      &kp L      &kp U      &kp Y      &kp SQT    &none
-&td0       &kp A      &kp R      &kp S     &lt 1 T    &kp G                        &kp LEFT  &kp ENTER  &kp RIGHT  &kp M      &kp N      &kp E      &kp I      &kp O      &kp ESC
-&kp LCTRL  &kp X      &kp C      &kp D     &kp V      &kp Z        &kt C_MUTE                &kp DOWN                &kp K      &kp H      &kp COMMA  &kp DOT    &kp FSLH   &none
-                                  &kp LGUI  &kp SPACE  &lt 2 SPACE                                                    &kp BSPC   &kp ENTER  &kp RALT
+&kp TAB    &ids Q GRAVE     &ids W LT     &ids F GT    &ids P MINUS  &ids B PIPE                                  &kp UP                  &ids J CARET  &ids L LBRC   &ids U RBRC   &ids Y DLLR   &ids SQT UNDER  &none
+&td0       &ids A EXCL      &ids R ASTRK  &ids S FSLH  &ids_t 1 EQUAL &ids G AMPS                       &kp LEFT  &kp ENTER  &kp RIGHT  &ids M HASH   &ids N LPAR   &ids E RPAR   &ids I SEMI   &ids O DQT     &kp ESC
+&kp LCTRL  &ids X TILDE     &ids C PLUS   &ids D LBKT  &ids V RBKT   &ids Z PRCNT  &kt C_MUTE                &kp DOWN                &ids K AT     &ids H COLON  &kp COMMA     &kp DOT       &ids FSLH QMARK &none
+                                             &kp LGUI     &kp SPACE     &tp_mt LALT SPACE                                                   &kp BSPC      &kp ENTER     &kp RALT
             >;
 
             sensor-bindings = <&inc_dec_kp C_VOLUME_UP C_VOL_DN>;

@@ -1,0 +1,12 @@
+config ZMK_BEHAVIOR_IDLE_TAP_DANCE
+    bool
+    default y
+    depends on DT_HAS_ZMK_BEHAVIOR_IDLE_TAP_DANCE_ENABLED
+
+if ZMK_BEHAVIOR_IDLE_TAP_DANCE
+
+config ZMK_BEHAVIOR_IDLE_TAP_DANCE_MAX_HELD
+    int "Idle Tap-Dance Max Held"
+    default 10
+
+endif
