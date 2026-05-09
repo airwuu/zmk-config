@@ -97,7 +97,7 @@
 &kp TAB    &as Q GRAVE      &as W LT      &as F GT     &as P MINUS   &as B PIPE                                   &kp UP                  &as J CARET   &as L LBRC    &as U RBRC    &as Y DLLR    &as SQT UNDER   &none
 &td0       &as A EXCL       &as R ASTRK   &as S FSLH   &as_t T EQUAL  &as G AMPS                        &kp LEFT  &kp ENTER  &kp RIGHT  &as M HASH    &as N LPAR    &as E RPAR    &as I SEMI    &as O DQT      &kp ESC
 &kp LCTRL  &as X TILDE      &as C PLUS    &as D LBKT   &as V RBKT    &as Z PRCNT   &kt C_MUTE                &kp DOWN                &as K AT      &as H COLON   &kp COMMA     &kp DOT       &as FSLH QMARK  &none
-                                             &kp LGUI     &kp SPACE     &tp_mt LALT SPACE                                                   &kp BSPC      &kp ENTER     &kp RALT
+                                             &kp LGUI     &kp SPACE     &tp_mt LALT SPACE                                                   &kp BSPC      &tp_mt LEFT_SHIFT ENTER  &kp RALT
             >;
 
             sensor-bindings = <&inc_dec_kp C_VOLUME_UP C_VOL_DN>;
